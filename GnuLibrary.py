@@ -755,11 +755,15 @@ class InteractionManager:
                     else:
                         print(get_translation(self.lang, 'invalid_path'))
             else:
-                path = input(get_translation(self.lang, 'enter_path', prompt_key)).strip()
-                if os.path.isdir(path):
-                    return os.path.abspath(path)
-                else:
-                    print(get_translation(self.lang, 'invalid_path'))
+                try:
+                    path = input(get_translation(self.lang, 'enter_path', prompt_key)).strip()
+                    if os.path.isdir(path):
+                        return os.path.abspath(path)
+                    else:
+                        print(get_translation(self.lang, 'invalid_path'))
+                except EOFError:
+                    print("\nInput ended unexpectedly. Exiting.")
+                    sys.exit(1)
     
     def present_change(self, change, index, total):
         """Present a single change to user and get decision."""
@@ -788,21 +792,25 @@ class InteractionManager:
             print("4. " + get_translation(self.lang, 'apply_all_skip'))
             
             while True:
-                choice = input(get_translation(self.lang, 'choose_action')).strip()
-                if choice == '1':
-                    change.user_action = 'copy'
-                    break
-                elif choice == '2':
-                    change.user_action = 'skip'
-                    break
-                elif choice == '3':
-                    self.batch_actions['new'] = 'copy'
-                    change.user_action = 'copy'
-                    break
-                elif choice == '4':
-                    self.batch_actions['new'] = 'skip'
-                    change.user_action = 'skip'
-                    break
+                try:
+                    choice = input(get_translation(self.lang, 'choose_action')).strip()
+                    if choice == '1':
+                        change.user_action = 'copy'
+                        break
+                    elif choice == '2':
+                        change.user_action = 'skip'
+                        break
+                    elif choice == '3':
+                        self.batch_actions['new'] = 'copy'
+                        change.user_action = 'copy'
+                        break
+                    elif choice == '4':
+                        self.batch_actions['new'] = 'skip'
+                        change.user_action = 'skip'
+                        break
+                except EOFError:
+                    print("\nInput ended. Exiting.")
+                    sys.exit(1)
         
         elif change.change_type == ChangeType.MISSING_FILE:
             item = change.target_item
@@ -816,21 +824,25 @@ class InteractionManager:
             print("4. " + get_translation(self.lang, 'apply_all_skip'))
             
             while True:
-                choice = input(get_translation(self.lang, 'choose_action')).strip()
-                if choice == '1':
-                    change.user_action = 'delete'
-                    break
-                elif choice == '2':
-                    change.user_action = 'skip'
-                    break
-                elif choice == '3':
-                    self.batch_actions['missing'] = 'delete'
-                    change.user_action = 'delete'
-                    break
-                elif choice == '4':
-                    self.batch_actions['missing'] = 'skip'
-                    change.user_action = 'skip'
-                    break
+                try:
+                    choice = input(get_translation(self.lang, 'choose_action')).strip()
+                    if choice == '1':
+                        change.user_action = 'delete'
+                        break
+                    elif choice == '2':
+                        change.user_action = 'skip'
+                        break
+                    elif choice == '3':
+                        self.batch_actions['missing'] = 'delete'
+                        change.user_action = 'delete'
+                        break
+                    elif choice == '4':
+                        self.batch_actions['missing'] = 'skip'
+                        change.user_action = 'skip'
+                        break
+                except EOFError:
+                    print("\nInput ended. Exiting.")
+                    sys.exit(1)
         
         elif change.change_type == ChangeType.MOVED_FILE:
             print(f"From: {change.target_item.relative_path}")
@@ -845,21 +857,25 @@ class InteractionManager:
             print("4. " + get_translation(self.lang, 'apply_all_skip'))
             
             while True:
-                choice = input(get_translation(self.lang, 'choose_action')).strip()
-                if choice == '1':
-                    change.user_action = 'move'
-                    break
-                elif choice == '2':
-                    change.user_action = 'skip'
-                    break
-                elif choice == '3':
-                    self.batch_actions['moved'] = 'move'
-                    change.user_action = 'move'
-                    break
-                elif choice == '4':
-                    self.batch_actions['moved'] = 'skip'
-                    change.user_action = 'skip'
-                    break
+                try:
+                    choice = input(get_translation(self.lang, 'choose_action')).strip()
+                    if choice == '1':
+                        change.user_action = 'move'
+                        break
+                    elif choice == '2':
+                        change.user_action = 'skip'
+                        break
+                    elif choice == '3':
+                        self.batch_actions['moved'] = 'move'
+                        change.user_action = 'move'
+                        break
+                    elif choice == '4':
+                        self.batch_actions['moved'] = 'skip'
+                        change.user_action = 'skip'
+                        break
+                except EOFError:
+                    print("\nInput ended. Exiting.")
+                    sys.exit(1)
         
         elif change.change_type in [ChangeType.NEW_FOLDER, ChangeType.REMOVED_FOLDER, ChangeType.MOVED_FOLDER]:
             if change.change_type == ChangeType.NEW_FOLDER:
@@ -878,13 +894,17 @@ class InteractionManager:
             print("2. Skip")
             
             while True:
-                choice = input(get_translation(self.lang, 'choose_action')).strip()
-                if choice == '1':
-                    change.user_action = 'apply'
-                    break
-                elif choice == '2':
-                    change.user_action = 'skip'
-                    break
+                try:
+                    choice = input(get_translation(self.lang, 'choose_action')).strip()
+                    if choice == '1':
+                        change.user_action = 'apply'
+                        break
+                    elif choice == '2':
+                        change.user_action = 'skip'
+                        break
+                except EOFError:
+                    print("\nInput ended. Exiting.")
+                    sys.exit(1)
         
         return change.user_action
     
